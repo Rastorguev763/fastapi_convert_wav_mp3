@@ -1,0 +1,7 @@
+fastapi
+requests
+sqlalchemy
+uvicorn
+psycopg2
+pydub
+ffmpeg-downloader

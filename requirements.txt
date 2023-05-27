@@ -4,4 +4,3 @@ sqlalchemy
 uvicorn
 psycopg2
 pydub
-ffmpeg-downloader

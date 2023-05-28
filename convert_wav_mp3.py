@@ -20,10 +20,11 @@ logger.addHandler(handler)
 # Указываем путь до исполняющего файла FFMPEG.EXE <'C:\ffmpeg\bin\ffmpeg.exe'>'
 AudioSegment.converter = r'C:\ffmpeg\bin\ffmpeg.exe'
 
-
 file_name = 'sample_1'
 file_path = f'.\songs\{file_name}.wav'
 # file_path = f'{file_name}.wav'
 
-song = AudioSegment.from_wav(file_path)
-song.export(f".\songs\convert\{file_name}_convert.mp3", format="mp3")
+def convert_wav_to_mp3(file_path):
+    file_name = file_path.split('\\')[-1].split('.')[0]
+    song = AudioSegment.from_wav(file_path)
+    song.export(f".\songs\convert\{file_name}_convert.mp3", format="mp3")

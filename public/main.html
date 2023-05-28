@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RASTORGUEV</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div id="message"></div>
+    <div id="additional-fields" style="display: none;">
+        <p>
+            Введите user id: <br />
+            <input name="field1" id="user_id" />
+        </p>
+        <p>
+            Введите user UUID: <br />
+            <input name="field2" id="user_UUID" />
+        </p>
+        <p>
+            Введите путь файла WAV: <br />
+            <input name="field2" id="wav_path" />
+        </p>
+        <button onclick="sendAdditionalFields()" id="send-additional-button">Отправить аудиозапись</button>
+    </div>
+    <div id="entry">
+        <p>
+            Введите имя: <br />
+            <input name="username" id="username" />
+        </p>
+        <button onclick="send()" id="send-button">Отправить</button>
+    </div>
+    <script>
+        async function send() {
+            const button = document.getElementById("send-button");
+            button.disabled = true;
+
+            const username = document.getElementById("username").value;
+
+            const response = await fetch("/userinfo", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_name: username
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById("message").textContent = data.message;
+                document.getElementById("additional-fields").style.display = "block";
+                // button.disabled = false;
+            } else {
+                console.log(response);
+                button.disabled = false;
+            }
+        }
+
+        async function sendAdditionalFields() {
+            const button = document.getElementById("send-additional-button");
+            button.disabled = true;
+
+            const user_id = document.getElementById("user_id").value;
+            const user_UUID = document.getElementById("user_UUID").value;
+            const wav_path = document.getElementById("wav_path").value;
+
+            // Отправляем запрос для дополнительных полей
+            const response = await fetch("/convert", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user_id: user_id,
+                    user_UUID: user_UUID,
+                    wav_path: wav_path
+                })
+            });
+
+            if (response.ok) {
+                // Обработка успешного ответа
+                const data = await response.json();
+                document.getElementById("message").textContent = data.message
+
+                document.getElementById("additional-fields").style.display = "none";
+                document.getElementById("entry").style.display = "none";
+
+                // Разблокируем кнопку
+                button.disabled = false;
+            } else {
+                console.log(response);
+                // Разблокируем кнопку в случае ошибки
+                button.disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>

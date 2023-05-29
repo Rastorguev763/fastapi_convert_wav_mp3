@@ -9,19 +9,21 @@
 <body>
     <div id="message"></div>
     <div id="additional-fields" style="display: none;">
-        <p>
-            Введите user id: <br />
-            <input name="field1" id="user_id" />
-        </p>
-        <p>
-            Введите user UUID: <br />
-            <input name="field2" id="user_UUID" />
-        </p>
-        <p>
-            Введите путь файла WAV: <br />
-            <input name="field2" id="wav_path" />
-        </p>
-        <button onclick="sendAdditionalFields()" id="send-additional-button">Отправить аудиозапись</button>
+        <form id="file-upload-form" enctype="multipart/form-data">
+            <p>
+                Введите user id: <br />
+                <input name="field1" id="user_id" />
+            </p>
+            <p>
+                Введите user UUID: <br />
+                <input name="field2" id="user_UUID" />
+            </p>
+            <p>
+                Введите путь файла WAV: <br />
+                <input type="file" name="audio_file" id="wav_path" />
+            </p>
+            <button onclick="sendAdditionalFields()" id="send-additional-button">Отправить аудиозапись</button>
+        </form>
     </div>
     <div id="entry">
         <p>
@@ -62,17 +64,29 @@
 
             const user_id = document.getElementById("user_id").value;
             const user_UUID = document.getElementById("user_UUID").value;
-            const wav_path = document.getElementById("wav_path").value;
+            const audioFile = document.getElementById("wav_path").value[0];
+
+            // Создаем объект FormData для отправки данных формы, включая выбранный файл
+            const formData = new FormData();
+            formData.append("user_id", user_id);
+            formData.append("user_UUID", user_UUID);
+            formData.append("audio_file", audioFile);
+
+            // Отправляем запрос для дополнительных полей
+            // const response = await fetch("/convert", {
+            //     method: "POST",
+            //     headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            //     body: JSON.stringify({
+            //         user_id: user_id,
+            //         user_UUID: user_UUID,
+            //         wav_path: wav_path
+            //     })
+            // });
 
             // Отправляем запрос для дополнительных полей
             const response = await fetch("/convert", {
                 method: "POST",
-                headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user_id: user_id,
-                    user_UUID: user_UUID,
-                    wav_path: wav_path
-                })
+                body: formData
             });
 
             if (response.ok) {

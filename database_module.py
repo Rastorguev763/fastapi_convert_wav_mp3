@@ -17,7 +17,10 @@ class Audio(Base):
     __tablename__ = 'audio_convert'
     audio_id = Column(Integer, primary_key=True, autoincrement=True)
     audio_name = Column(String)
+    file_path = Column(String)
+    file_convert_path = Column(String)
     audiomp3_UUID = Column(String)
+    user_id_create = Column(String)
     created_date = Column(DateTime, default=datetime.now)
 
 # создание sqlite 
@@ -44,24 +47,33 @@ Session = sessionmaker(bind=engine)
 # Base.metadata.create_all(bind=engine)
 # Session = sessionmaker(bind=engine)
 
+def sqlalchemy_to_json(my_object):
+    # Преобразуем объект в словарь
+    my_dict = my_object.__dict__
+
+    # Удаляем некоторые ключи, которые не нужны
+    keys_to_remove = ['_sa_instance_state', 'created_date']
+    for key in keys_to_remove:
+        my_dict.pop(key, None)
+
+    return my_dict
+
 def generate_uuid(username):
+    code_word = 'babaski'
     # Генерируем UUID на основе имени пользователя и имени пространства имен UUID
-    user_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, username)
+    user_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, username+code_word)
     return user_uuid
 
-def write_in_database(data):
+def write_audio_info(data, file_convert_path):
     session = Session()
-    # TODO: user_id = data[]
-    user_name = data['user_name']
-    user_UUID = generate_uuid(data['user_name'])
-    audio_name = data['audio_path']
-    # TODO: audio_id = data[]
-    # audiomp3_UUID = data[]
+    user_id_create = data['user_id']
+    file_path = data['wav_path']
+    file_convert_path = file_convert_path
+    audio_name = file_path.split('\\')[-1].split('.')[0]
+    audiomp3_UUID = generate_uuid(audio_name)
 
 # Сохранение вопроса в БД
-    user = Users(user_name=user_name, user_UUID=str(user_UUID))
-    audio = Audio(audio_name=audio_name)
-    session.add(user)
+    audio = Audio(user_id_create=user_id_create, audio_name=audio_name, audiomp3_UUID=str(audiomp3_UUID), file_path=file_path, file_convert_path=file_convert_path)
     session.add(audio)
     session.commit()
 
@@ -69,12 +81,12 @@ def check_user(data):
     session = Session()
     # Проверка наличия вопроса в БД
     user_name = data['user_name']
-    user_UUID = generate_uuid(data['user_name'])
     user_in_base = session.query(Users).filter_by(user_name=user_name).first()
     if user_in_base:
         print(f'ПОЛЬЗОВАТЕЛЬ С ТАКИМ ИМЕНЕМ УЖЕ ЕСТЬ {user_name}')
         return user_in_base
     else:
+        user_UUID = generate_uuid(data['user_name'])
         user = Users(user_name=user_name, user_UUID=str(user_UUID))
         session.add(user)
         session.commit()

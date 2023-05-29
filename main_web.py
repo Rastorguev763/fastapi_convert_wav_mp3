@@ -1,38 +1,41 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, File, UploadFile
 from fastapi.responses import FileResponse
 from database_module import*
 from convert_wav_mp3 import*
+import shutil
 
 app = FastAPI()
 
 # TODO: POST метод для получения вопросов
 @app.post("/userinfo")
 def new_user(data = Body()):
-    users = check_user(data)
-    if users:
-       user_UUID = users.user_UUID
-       user_id = users.user_id
+    user = check_user(data)
+    if user:
+       user_UUID = user.user_UUID
+       user_id = user.user_id
     return {"message": f"АЙДИ ПОЛЬЗОВАТЕЛЯ - {user_id}, УИД ПОЛЬЗОВАТЕЛЯ - {user_UUID}"}
 
-# TODO: Добавить запись информации в базу и формирования на основе этой информации ссылки для скачивания файла
+# # TODO: Добавить ссылку для скачивания файла
+# @app.post("/convert")
+# def convert_audio(data = Body()):
+#     # print(audio_wav_path)
+#     file_convert_path = convert_wav_to_mp3(data)
+#     write_audio_info(data, file_convert_path)
+#     return {"message": f"ССЫЛКА ДЛЯ СКАЧИВАНИЯ {file_convert_path}"}
+
 @app.post("/convert")
-def convert_audio(data = Body()):
-    audio_wav_path = data[r'wav_path']
-    print(audio_wav_path)
-    convert_wav_to_mp3(audio_wav_path)
-    return {"message": f"ССЫЛКА ДЛЯ СКАЧИВАНИЯ - {audio_wav_path}"}
+async def convert_audio(user_id: str, user_UUID: str, audio_file: UploadFile = File(...)):
+    # Доступ к сохраненному файлу: audio_file
+    # Доступ к другим данным из формы: user_id, user_UUID
 
+    # Определите путь для сохранения файла
+    save_path = f"./songs/convert/{audio_file.filename}"
+    
+    # Сохранение файла на сервере
+    with open(save_path, "wb") as f:
+        shutil.copyfileobj(audio_file.file, f)
 
-def sqlalchemy_to_json(my_object):
-    # Преобразуем объект в словарь
-    my_dict = my_object.__dict__
-
-    # Удаляем некоторые ключи, которые не нужны
-    keys_to_remove = ['_sa_instance_state', 'created_date']
-    for key in keys_to_remove:
-        my_dict.pop(key, None)
-
-    return my_dict
+    return {"message": "Файл аудио успешно загружен и обработан."}
 
 @app.get("/")
 def root():

@@ -9,7 +9,7 @@
 <body>
     <div id="message"></div>
     <div id="additional-fields" style="display: none;">
-        <form id="file-upload-form" enctype="multipart/form-data">
+        <form id="file-upload-form" method="post" enctype="multipart/form-data">
             <p>
                 Введите user id: <br />
                 <input name="field1" id="user_id" />
@@ -64,7 +64,7 @@
 
             const user_id = document.getElementById("user_id").value;
             const user_UUID = document.getElementById("user_UUID").value;
-            const audioFile = document.getElementById("wav_path").value[0];
+            const audioFile = document.getElementById("wav_path").files[0];
 
             // Создаем объект FormData для отправки данных формы, включая выбранный файл
             const formData = new FormData();

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, File, UploadFile
+from fastapi import FastAPI, Body, File, UploadFile, Form
 from fastapi.responses import FileResponse
 from database_module import*
 from convert_wav_mp3 import*
@@ -6,7 +6,7 @@ import shutil
 
 app = FastAPI()
 
-# TODO: POST метод для получения вопросов
+# TODO: POST 
 @app.post("/userinfo")
 def new_user(data = Body()):
     user = check_user(data)
@@ -23,13 +23,15 @@ def new_user(data = Body()):
 #     write_audio_info(data, file_convert_path)
 #     return {"message": f"ССЫЛКА ДЛЯ СКАЧИВАНИЯ {file_convert_path}"}
 
-@app.post("/convert")
-async def convert_audio(user_id: str, user_UUID: str, audio_file: UploadFile = File(...)):
+@app.post("/")
+# async def convert_audio(user_id: str, user_UUID: str, audio_file: UploadFile = Body(...)):
+async def convert_audio(user_id: str = Form(...), user_UUID: str = Form(...), audio_file: UploadFile = File(...)):
     # Доступ к сохраненному файлу: audio_file
     # Доступ к другим данным из формы: user_id, user_UUID
-
+    print('TRATATATATAT')
+    
     # Определите путь для сохранения файла
-    save_path = f"./songs/convert/{audio_file.filename}"
+    save_path = f"songs/convert/{audio_file.filename}"
     
     # Сохранение файла на сервере
     with open(save_path, "wb") as f:

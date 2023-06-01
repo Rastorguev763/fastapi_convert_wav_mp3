@@ -73,17 +73,6 @@
             formData.append("audio_file", audioFile);
 
             // Отправляем запрос для дополнительных полей
-            // const response = await fetch("/convert", {
-            //     method: "POST",
-            //     headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            //     body: JSON.stringify({
-            //         user_id: user_id,
-            //         user_UUID: user_UUID,
-            //         wav_path: wav_path
-            //     })
-            // });
-
-            // Отправляем запрос для дополнительных полей
             const response = await fetch("/convert", {
                 method: "POST",
                 body: formData
@@ -94,6 +83,27 @@
                 const data = await response.json();
                 document.getElementById("message").textContent = data.message
 
+                fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const fileUrl = data.file_url;
+                        window.location.href = fileUrl;
+                    })
+                    .catch(error => console.error(error));
+                // // Получаем ссылку на сконвертированный файл
+                // const fileUrl = data.file_url;
+
+                // // Добавляем ссылку на страницу
+                // const linkElement = document.createElement("a");
+                // linkElement.href = fileUrl;
+                // linkElement.textContent = "Download audio";
+                // document.getElementById("audio-link-container").appendChild(linkElement);
+
+
+                // Скрываем формы обратно
                 document.getElementById("additional-fields").style.display = "none";
                 document.getElementById("entry").style.display = "none";
 

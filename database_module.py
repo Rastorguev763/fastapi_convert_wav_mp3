@@ -64,10 +64,10 @@ def generate_uuid(username):
     user_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, username+code_word)
     return user_uuid
 
-def write_audio_info(data, file_convert_path):
+def write_audio_info(user_id_create, file_path, file_convert_path):
     session = Session()
-    user_id_create = data['user_id']
-    file_path = data['wav_path']
+    user_id_create = user_id_create
+    file_path = file_path
     file_convert_path = file_convert_path
     audio_name = file_path.split('\\')[-1].split('.')[0]
     audiomp3_UUID = generate_uuid(audio_name)

@@ -73,17 +73,12 @@
             formData.append("audio_file", audioFile);
 
             // Отправляем запрос для дополнительных полей
-            const response = await fetch("/convert", {
-                method: "POST",
-                body: formData
-            });
+            // const response = await fetch("/convert", {
+            //     method: "POST",
+            //     body: formData
+            // });
 
-            if (response.ok) {
-                // Обработка успешного ответа
-                const data = await response.json();
-                document.getElementById("message").textContent = data.message
-
-                fetch('/convert', {
+            const response = await fetch('/convert', {
                     method: 'POST',
                     body: formData
                 })
@@ -93,6 +88,14 @@
                         window.location.href = fileUrl;
                     })
                     .catch(error => console.error(error));
+
+
+            if (response.ok) {
+                // Обработка успешного ответа
+                const data = await response.json();
+                document.getElementById("message").textContent = data.message
+
+                
                 // // Получаем ссылку на сконвертированный файл
                 // const fileUrl = data.file_url;
 

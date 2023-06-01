@@ -2,7 +2,6 @@ from fastapi import FastAPI, Body, File, UploadFile, Form, Request
 from fastapi.responses import FileResponse
 from database_module import*
 from convert_wav_mp3 import*
-import shutil
 
 app = FastAPI()
 
@@ -19,25 +18,22 @@ async def convert_audio(user_id: str = Form(...), audio_file: UploadFile = File(
     # Доступ к сохраненному файлу: audio_file
     # Доступ к другим данным из формы: user_id
 
-    try:
-         # Определите путь для сохранения файла
-        filename = f'{user_id}_{audio_file.filename.split(".")[0]}_{int(time.time())}.{audio_file.filename.split(".")[-1]}'
-        save_path = f"songs/{filename}"
+    return_convert = convert_wav_to_mp3(audio_file, user_id)
 
-        file_convert_path = convert_wav_to_mp3(audio_file, user_id)
+    file_convert_path = return_convert[0]
+    file_safe_path = return_convert[1]
 
-            # Сохранение файла на сервере
-        with open(save_path, "wb") as f:
-            shutil.copyfileobj(audio_file.file, f)
-    except:
-        return {"message": f"Произошла ошибка, попробуйте снова."} 
-    
+    write_audio_info(user_id, file_safe_path, file_convert_path)
+
+    # TODO:download_url = f"/record?id={file_convert_path}&user={user_id}"
+    # hhtp://host:port/record?id=id_audio&user=user_id
+
     return {"file_url": f"/record?file_path={file_convert_path}"}
-# hhtp://host:port/record?id=id_audio&user=user_id
 
+# TODO: get /record?id={file_convert_path}&user={user_id}
+# def get path url
 @app.get("/record")
 async def download_file(file_path: str):
-    print("EBALALALLA")
     return FileResponse(file_path)
 
 @app.get("/")

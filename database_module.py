@@ -35,13 +35,13 @@ Session = sessionmaker(bind=engine)
 # db_host = '127.0.0.1'
 # db_port = '5432'
 # db_name = 'postgres'
-# TODO: container_name = 'postgres_questions'
+# container_name = 'postgres_convert'
 
 # Формируем строку подключения
 # запуск с локальной машины
 # db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
 
-# TODO: запуск с контейнера
+# запуск с контейнера
 # db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
 
 # engine = create_engine(db_url)

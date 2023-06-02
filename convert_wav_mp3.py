@@ -15,7 +15,7 @@ handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 # Указываем путь до исполняющего файла FFMPEG.EXE <'C:\ffmpeg\bin\ffmpeg.exe'>'
-AudioSegment.converter = r'C:\ffmpeg\bin\ffmpeg.exe'
+AudioSegment.converter = r'ffmpeg\bin\ffmpeg.exe'
 
 # TODO: создавать папки если их не существует
 def convert_wav_to_mp3(audio_file, user_id, ):

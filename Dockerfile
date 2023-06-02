@@ -1,6 +1,9 @@
 # Используйте официальный образ Python в качестве базового образа
 FROM python:3.9
 
+# Установите FFmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Установите рабочую директорию в контейнере
 WORKDIR /app
 

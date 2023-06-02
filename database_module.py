@@ -23,7 +23,7 @@ class Audio(Base):
     user_id_create = Column(String)
     created_date = Column(DateTime, default=datetime.now)
 
-# создание sqlite 
+# # создание sqlite 
 engine = create_engine('sqlite:///questions.sqlite')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
@@ -43,6 +43,7 @@ Session = sessionmaker(bind=engine)
 
 # TODO: запуск с контейнера
 # db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
+
 # engine = create_engine(db_url)
 # Base.metadata.create_all(bind=engine)
 # Session = sessionmaker(bind=engine)

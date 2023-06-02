@@ -19,12 +19,13 @@ AudioSegment.converter = r'C:\ffmpeg\bin\ffmpeg.exe'
 
 # TODO: создавать папки если их не существует
 def convert_wav_to_mp3(audio_file, user_id, ):
+
     try:
          # Определите путь для сохранения файла
         filename = f'{user_id}_{audio_file.filename.split(".")[0]}_{int(time.time())}.{audio_file.filename.split(".")[-1]}'
         file_save_path = f"songs\{filename}"
 
-            # Сохранение файла на сервере
+        # Сохранение файла на сервере
         with open(file_save_path, "wb") as f:
             shutil.copyfileobj(audio_file.file, f)
     except Exception as e:

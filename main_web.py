@@ -15,14 +15,13 @@ async def new_user(data = Body()):
     return {"message": f"АЙДИ ПОЛЬЗОВАТЕЛЯ - {user_id}, УИД ПОЛЬЗОВАТЕЛЯ - {user_UUID}"}
 
 
-# TODO: проверка usera и UUID
+# проверка usera и UUID
 
 @app.post("/convert")
 async def convert_audio(user_id: str = Form(...), user_UUID: str = Form(...), audio_file: UploadFile = File(...)):
     # Доступ к сохраненному файлу: audio_file
     # Доступ к другим данным из формы: user_id
     user_info = check_UUID(user_UUID)
-    # print(f'{user_info[0].user_id} --- {user_id}')
     
     try:
         if str(user_info[0].user_id) == user_id:

@@ -79,23 +79,22 @@
             // });
 
             const response = await fetch('/convert', {
-                    method: 'POST',
-                    body: formData
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const fileUrl = data.file_url;
+                    window.location.href = fileUrl;
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        const fileUrl = data.file_url;
-                        window.location.href = fileUrl;
-                    })
-                    .catch(error => console.error(error));
-
+                .catch(error => console.error(error));
 
             if (response.ok) {
                 // Обработка успешного ответа
                 const data = await response.json();
                 document.getElementById("message").textContent = data.message
 
-                
+
                 // // Получаем ссылку на сконвертированный файл
                 // const fileUrl = data.file_url;
 

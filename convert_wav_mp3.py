@@ -33,6 +33,8 @@ def convert_wav_to_mp3(audio_file, user_id, ):
     file_name = audio_file.filename.split('.')[0]
     current_timestamp = int(time.time())
     song = AudioSegment.from_wav(audio_file.file)
-    file_convert_path = f".\songs\convert\{user_id}_{file_name}_convert_{current_timestamp}.mp3"
+    file_convert_path = f"songs\convert\{user_id}_{file_name}_convert_{current_timestamp}.mp3"
     song.export(file_convert_path, format="mp3")
+
+    # print(file_convert_path, file_save_path)
     return file_convert_path, file_save_path

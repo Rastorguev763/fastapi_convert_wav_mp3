@@ -77,6 +77,9 @@ def write_audio_info(user_id_create, file_path, file_convert_path):
     session.add(audio)
     session.commit()
 
+    audio_in_base = session.query(Audio).filter_by(user_id_create=user_id_create).order_by(Audio.created_date.desc()).first()
+    return audio_in_base
+
 def check_user(data):
     session = Session()
     # Проверка наличия вопроса в БД
@@ -93,3 +96,15 @@ def check_user(data):
         print(f'ПОЛЬЗОВАТЕЛЬ С ТАКИМ ИМЕНЕМ {user_name} СОЗДАН')
         user_in_base = session.query(Users).filter_by(user_name=user_name).first()
         return user_in_base
+    
+def get_audio(id, user):
+    session = Session()
+    audio_info = session.query(Audio).filter_by(user_id_create=user,audio_id=id ).all()
+    return audio_info
+
+# TODO: сделать функцию проверки в базе на соответсвие user и UUID
+
+def check_UUID(user_UUID):
+    session = Session()
+    user_info = session.query(Users).filter_by(user_UUID=user_UUID).all()
+    return user_info

@@ -24,29 +24,29 @@ class Audio(Base):
     created_date = Column(DateTime, default=datetime.now)
 
 # # создание sqlite 
-engine = create_engine('sqlite:///questions.sqlite')
-Base.metadata.create_all(bind=engine)
-Session = sessionmaker(bind=engine)
+# engine = create_engine('sqlite:///questions.sqlite')
+# Base.metadata.create_all(bind=engine)
+# Session = sessionmaker(bind=engine)
 
 # Подключение и создание таблицы в PosgreSQL
 # Замените значения на свои соответствующие параметры которые задавали при создания PostgreSQL
-# db_user = 'root'
-# db_password = 'root'
-# db_host = '127.0.0.1'
-# db_port = '5432'
-# db_name = 'postgres'
-# container_name = 'postgres_convert'
+db_user = 'root'
+db_password = 'root'
+db_host = '127.0.0.1'
+db_port = '5432'
+db_name = 'postgres'
+container_name = 'postgres_convert'
 
 # Формируем строку подключения
 # запуск с локальной машины
 # db_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
 
 # запуск с контейнера
-# db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
+db_url = f'postgresql://{db_user}:{db_password}@{container_name}/{db_name}'
 
-# engine = create_engine(db_url)
-# Base.metadata.create_all(bind=engine)
-# Session = sessionmaker(bind=engine)
+engine = create_engine(db_url)
+Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
 
 def sqlalchemy_to_json(my_object):
     # Преобразуем объект в словарь
@@ -70,7 +70,7 @@ def write_audio_info(user_id_create, file_path, file_convert_path):
     user_id_create = user_id_create
     file_path = file_path
     file_convert_path = file_convert_path
-    audio_name = file_path.split('\\')[-1].split('.')[0]
+    audio_name = file_path.split('/')[-1].split('.')[0]
     audiomp3_UUID = generate_uuid(audio_name)
 
 # Сохранение вопроса в БД
